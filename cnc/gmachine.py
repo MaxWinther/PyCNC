@@ -60,6 +60,9 @@ class GMachine(object):
         self._absoluteCoordinates = True
         self._plane = PLANE_XY
 
+    def _await_user(self):
+        print("| Await user input |")
+
     # noinspection PyMethodMayBeStatic
     def _spindle(self, spindle_speed):
         hal.join()
@@ -407,6 +410,8 @@ class GMachine(object):
                     self._convertCoordinates)
             else:
                 self._local = self._position
+        elif c == 'M0': # stop and wait for user input
+            self._await_user()
         elif c == 'M3':  # spindle on
             spindle_rpm = gcode.get('S', self._spindle_rpm)
             if spindle_rpm < 0 or spindle_rpm > SPINDLE_MAX_RPM:
