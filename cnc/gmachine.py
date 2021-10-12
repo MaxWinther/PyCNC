@@ -413,9 +413,9 @@ class GMachine(object):
                 raise GMachineException("bad spindle speed")
             self._spindle(spindle_rpm)
             self._spindle_rpm = spindle_rpm
-        elif c == 'M5':  # spindle off
+        elif c == 'M5' or c == 'M05':  # spindle off
             self._spindle(0)
-        elif c == 'M2' or c == 'M30':  # program finish, reset everything.
+        elif c == 'M2' or c == 'M02' or c == 'M30':  # program finish, reset everything.
             self.reset()
         elif c == 'M84':  # disable motors
             hal.disable_steppers()

@@ -42,7 +42,8 @@ def do_line(line):
 
 
 def main():
-    logging_config.debug_disable()
+    #logging_config.debug_disable()
+    logging_config.debug_enable()
     try:
         if len(sys.argv) > 1:
             # Read file with gcode
