@@ -412,7 +412,7 @@ class GMachine(object):
                 self._local = self._position
         elif c == 'M0': # stop and wait for user input
             self._await_user()
-        elif c == 'M3':  # spindle on
+        elif c == 'M3' or c == 'M03':  # spindle on
             spindle_rpm = gcode.get('S', self._spindle_rpm)
             if spindle_rpm < 0 or spindle_rpm > SPINDLE_MAX_RPM:
                 raise GMachineException("bad spindle speed")
