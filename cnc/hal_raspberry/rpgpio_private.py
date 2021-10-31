@@ -217,6 +217,7 @@ class DMAProto(object):
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, DMA_CS_END)
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CONBLK_AD,
                             self._phys_memory.get_bus_address())
+
         cs = DMA_CS_PRIORITY(7) | DMA_CS_PANIC_PRIORITY(7) | DMA_CS_DISDEBUG
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
 

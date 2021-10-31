@@ -129,6 +129,7 @@ class DMAGPIO(DMAProto):
         next_cb = self.__current_address + 3 * self._DMA_CONTROL_BLOCK_SIZE
         if next_cb > self._phys_memory.get_size():
             raise MemoryError("Out of allocated memory.")
+
         next3 = next_cb + self._phys_memory.get_bus_address()
         next2 = next3 - self._DMA_CONTROL_BLOCK_SIZE
         next1 = next2 - self._DMA_CONTROL_BLOCK_SIZE

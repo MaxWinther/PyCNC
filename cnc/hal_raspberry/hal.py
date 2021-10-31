@@ -243,17 +243,17 @@ def move(generator):
     for direction, tx, ty, tz, te in generator:
         # logging.debug("hal::move() tx={}, ty={}, tz={}".format(tx, ty, tz))
         if current_cb is not None:
-            logging.debug("hal::move() current_cb is set, wait for start")
+            # logging.debug("hal::move() current_cb is set, wait for start")
             while dma.current_address() + bytes_per_iter >= current_cb:
                 time.sleep(0.001)
                 current_cb = dma.current_control_block()
                 if current_cb is None:
-                    logging.debug("hal::move() current_cb is now not set, start")
+                    # logging.debug("hal::move() current_cb is now not set, start")
                     k0 = k
                     st = time.time()
                     break  # previous dma sequence has stopped
-        else:
-            logging.debug("hal::move() current_cb is not set, start")
+        # else:
+            # logging.debug("hal::move() current_cb is not set, start")
 
         # set up directions
         if direction:
