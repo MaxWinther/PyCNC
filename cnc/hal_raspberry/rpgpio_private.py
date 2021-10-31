@@ -228,8 +228,14 @@ class DMAProto(object):
         cs = self._dma.read_int(self._DMA_CHANNEL_ADDRESS + DMA_CS)
         cs |= DMA_CS_ABORT
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
+
         cs &= ~DMA_CS_ACTIVE
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
+
+        cs = self._dma.read_int(self._DMA_CHANNEL_ADDRESS + DMA_CS)
+        if cs & DMA_CS_ACTIVE == DMA_CS_ACTIVE:
+            logging.info("DMAProto _stop_dma() failed to reset DMA_CS_ACTIVE")
+
         cs |= DMA_CS_RESET
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
 

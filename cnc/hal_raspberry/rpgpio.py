@@ -202,18 +202,22 @@ class DMAGPIO(DMAProto):
         """
         # configure PWM hardware module which will clocks DMA
         self._pwm.write_int(PWM_CTL, 0)
+
         # disable
         self._clock.write_int(CM_PWM_CNTL, CM_PASSWORD | CM_SRC_PLLD)
         while (self._clock.read_int(CM_PWM_CNTL) & CM_CNTL_BUSY) != 0:
             time.sleep(0.00001)  # 10 us, wait until BUSY bit is clear
+
         # configure, 100 MHz
         self._clock.write_int(CM_PWM_DIV, CM_PASSWORD | CM_DIV_VALUE(5))
         self._clock.write_int(CM_PWM_CNTL,
                               CM_PASSWORD | CM_SRC_PLLD | CM_CNTL_ENABLE)
+
         self._pwm.write_int(PWM_RNG1, 100)
         self._pwm.write_int(PWM_DMAC, PWM_DMAC_ENAB | PWM_DMAC_PANIC(15)
                             | PWM_DMAC_DREQ(15))
         self._pwm.write_int(PWM_CTL, PWM_CTL_CLRF)
+
         # enable
         self._pwm.write_int(PWM_CTL, PWM_CTL_USEF1 | PWM_CTL_PWEN1)
         super(DMAGPIO, self)._run_dma()
