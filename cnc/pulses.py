@@ -60,17 +60,22 @@ class PulseGenerator(object):
         if velocity_mm_sec.x * SECONDS_IN_MINUTE > MAX_VELOCITY_MM_PER_MIN_X:
             k = min(k, MAX_VELOCITY_MM_PER_MIN_X
                     / velocity_mm_sec.x / SECONDS_IN_MINUTE)
+
         if velocity_mm_sec.y * SECONDS_IN_MINUTE > MAX_VELOCITY_MM_PER_MIN_Y:
             k = min(k, MAX_VELOCITY_MM_PER_MIN_Y
                     / velocity_mm_sec.y / SECONDS_IN_MINUTE)
+
         if velocity_mm_sec.z * SECONDS_IN_MINUTE > MAX_VELOCITY_MM_PER_MIN_Z:
             k = min(k, MAX_VELOCITY_MM_PER_MIN_Z
                     / velocity_mm_sec.z / SECONDS_IN_MINUTE)
+
         if velocity_mm_sec.e * SECONDS_IN_MINUTE > MAX_VELOCITY_MM_PER_MIN_E:
             k = min(k, MAX_VELOCITY_MM_PER_MIN_E
                     / velocity_mm_sec.e / SECONDS_IN_MINUTE)
+
         if k != 1.0:
             logging.warning("Out of speed, multiply velocity by {}".format(k))
+
         return velocity_mm_sec * k
 
     def _get_movement_parameters(self):
@@ -188,6 +193,7 @@ class PulseGenerator(object):
             if STEPPER_INVERTED_E:
                 dir_e = -dir_e
             return True, dir_x, dir_y, dir_z, dir_e
+
         # check condition to stop
         if tx is None and ty is None and tz is None and te is None:
             raise StopIteration
@@ -198,6 +204,7 @@ class PulseGenerator(object):
             if i is not None and (m is None or i < m):
                 m = i
         am = self._to_accelerated_time(m)
+
         # sort pulses in time
         if tx is not None:
             if tx > m:
@@ -205,18 +212,21 @@ class PulseGenerator(object):
             else:
                 tx = am
                 self._iteration_x += 1
+
         if ty is not None:
             if ty > m:
                 ty = None
             else:
                 ty = am
                 self._iteration_y += 1
+
         if tz is not None:
             if tz > m:
                 tz = None
             else:
                 tz = am
                 self._iteration_z += 1
+
         if te is not None:
             if te > m:
                 te = None
@@ -255,10 +265,12 @@ class PulseGeneratorLinear(PulseGenerator):
         """
         super(PulseGeneratorLinear, self).__init__(delta_mm)
         distance_mm = abs(delta_mm)  # type: Coordinates
+
         # velocity of each axis
         distance_total_mm = distance_mm.length()
         self.max_velocity_mm_per_sec = self._adjust_velocity(distance_mm * (
             velocity_mm_per_min / SECONDS_IN_MINUTE / distance_total_mm))
+
         # acceleration time
         self.acceleration_time_s = (self.max_velocity_mm_per_sec.find_max()
                                     / STEPPER_MAX_ACCELERATION_MM_PER_S2)
@@ -281,14 +293,22 @@ class PulseGeneratorLinear(PulseGenerator):
                                  * STEPPER_MAX_ACCELERATION_MM_PER_S2
             self.linear_time_s = (linear_distance_mm
                                   / self.max_velocity_mm_per_sec.length())
+
         self._total_pulses_x = round(distance_mm.x * STEPPER_PULSES_PER_MM_X)
         self._total_pulses_y = round(distance_mm.y * STEPPER_PULSES_PER_MM_Y)
         self._total_pulses_z = round(distance_mm.z * STEPPER_PULSES_PER_MM_Z)
         self._total_pulses_e = round(distance_mm.e * STEPPER_PULSES_PER_MM_E)
+
         self._direction = (math.copysign(1, delta_mm.x),
                            math.copysign(1, delta_mm.y),
                            math.copysign(1, delta_mm.z),
                            math.copysign(1, delta_mm.e))
+
+    def __str__(self):
+        return 'PulseGeneratorLinear(total_pulses_x=' + str(self._total_pulses_x) \
+               + ', total_pulses_y=' + str(self._total_pulses_y)\
+               + ', total_pulses_z' + str(self._total_pulses_z) \
+               + ', total_pulses_e' + str(self._total_pulses_e) + ')'
 
     def _get_movement_parameters(self):
         """ Return movement parameters, see super class for details.

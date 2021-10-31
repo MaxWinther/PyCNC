@@ -221,10 +221,14 @@ def move(generator):
     # moving. In this case machine would safely paused between commands until
     # calculation is done.
 
+    logging.debug("hal::move() generator={}".format(generator))
+
     # enable steppers
     gpio.clear(STEPPERS_ENABLE_PIN)
+
     # 4 control blocks per 32 bytes
     bytes_per_iter = 4 * dma.control_block_size()
+
     # prepare and run dma
     dma.clear()  # should just clear current address, but not stop current DMA
     prev = 0
@@ -235,6 +239,7 @@ def move(generator):
     k = 0
     k0 = 0
     for direction, tx, ty, tz, te in generator:
+        logging.debug("hal::move() tx={}".format(tx))
         if current_cb is not None:
             while dma.current_address() + bytes_per_iter >= current_cb:
                 time.sleep(0.001)
@@ -243,6 +248,7 @@ def move(generator):
                     k0 = k
                     st = time.time()
                     break  # previous dma sequence has stopped
+
         if direction:  # set up directions
             pins_to_set = 0
             pins_to_clear = 0
@@ -270,6 +276,7 @@ def move(generator):
             if i is not None and (m is None or i < m):
                 m = i
         k = int(round(m * US_IN_SECONDS))
+
         if tx is not None:
             pins |= STEP_PIN_MASK_X
         if ty is not None:
@@ -278,13 +285,17 @@ def move(generator):
             pins |= STEP_PIN_MASK_Z
         if te is not None:
             pins |= STEP_PIN_MASK_E
+
         if k - prev > 0:
             dma.add_delay(k - prev)
+
         dma.add_pulse(pins, STEPPER_PULSE_LENGTH_US)
+
         # TODO not a precise way! pulses will set in queue, instead of crossing
         # if next pulse start during pulse length. Though it almost doesn't
         # matter for pulses with 1-2us length.
         prev = k + STEPPER_PULSE_LENGTH_US
+
         # instant run handling
         if not is_ran and instant and current_cb is None:
             if k - k0 > 100000:  # wait at least 100 ms is uploaded
