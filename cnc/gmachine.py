@@ -104,7 +104,7 @@ class GMachine(object):
         if not pos.is_in_aabb(Coordinates(0.0, 0.0, 0.0, 0.0),
                               Coordinates(TABLE_SIZE_X_MM, TABLE_SIZE_Y_MM,
                                           TABLE_SIZE_Z_MM, 0)):
-            raise GMachineException("out of effective area")
+            raise GMachineException("out of effective area pos=" + str(pos))
 
     # noinspection PyMethodMayBeStatic
     def __check_velocity(self, max_velocity):
@@ -112,7 +112,7 @@ class GMachine(object):
                 or max_velocity.y > MAX_VELOCITY_MM_PER_MIN_Y \
                 or max_velocity.z > MAX_VELOCITY_MM_PER_MIN_Z \
                 or max_velocity.e > MAX_VELOCITY_MM_PER_MIN_E:
-            raise GMachineException("out of maximum speed")
+            raise GMachineException("out of maximum speed max=" + str(max_velocity))
 
     def _move_linear(self, delta, velocity):
         delta = delta.round(1.0 / STEPPER_PULSES_PER_MM_X,

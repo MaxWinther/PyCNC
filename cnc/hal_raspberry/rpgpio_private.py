@@ -6,6 +6,7 @@ import fcntl
 import array
 import atexit
 import ctypes
+import logging
 
 # Raspberry Pi registers
 # https://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
@@ -238,6 +239,7 @@ class DMAProto(object):
         :return: boolean value
         """
         cs = self._dma.read_int(self._DMA_CHANNEL_ADDRESS + DMA_CS)
+        # logging.debug("DMI is_active cs={0:b}".format(cs))
         if cs & DMA_CS_ACTIVE == DMA_CS_ACTIVE:
             return True
         return False

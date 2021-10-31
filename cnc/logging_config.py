@@ -1,7 +1,7 @@
 import logging
 
 logging.basicConfig(level=logging.CRITICAL,
-                    format='[%(levelname)s] %(message)s')
+                    format='%(asctime)s [%(levelname)s] %(message)s')
 
 
 def debug_enable():

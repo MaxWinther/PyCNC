@@ -2,18 +2,19 @@
 # Hardware config.
 
 # Maximum velocity for each axis in millimeter per minute.
-MAX_VELOCITY_MM_PER_MIN_X = 24000
-MAX_VELOCITY_MM_PER_MIN_Y = 12000
-MAX_VELOCITY_MM_PER_MIN_Z = 600
+MAX_VELOCITY_MM_PER_MIN_X = 200
+MAX_VELOCITY_MM_PER_MIN_Y = 200
+MAX_VELOCITY_MM_PER_MIN_Z = 101
 MAX_VELOCITY_MM_PER_MIN_E = 1500
 MIN_VELOCITY_MM_PER_MIN = 1
 # Average velocity for endstop calibration procedure
 CALIBRATION_VELOCITY_MM_PER_MIN = 300
 
 # Stepper motors steps per millimeter for each axis.
-STEPPER_PULSES_PER_MM_X = 100
-STEPPER_PULSES_PER_MM_Y = 100
-STEPPER_PULSES_PER_MM_Z = 400
+# STEPPER_PULSES_PER_MM_X = 266 20 cm for x100
+STEPPER_PULSES_PER_MM_X = 133 
+STEPPER_PULSES_PER_MM_Y = 133 
+STEPPER_PULSES_PER_MM_Z = 133
 STEPPER_PULSES_PER_MM_E = 150
 
 # Invert axises direction, by default(False) high level means increase of
@@ -36,7 +37,7 @@ TABLE_SIZE_Y_MM = 400
 TABLE_SIZE_Z_MM = 100
 
 # Mixed settings.
-STEPPER_PULSE_LENGTH_US = 10
+STEPPER_PULSE_LENGTH_US = 5 
 STEPPER_MAX_ACCELERATION_MM_PER_S2 = 3000  # for all axis, mm per sec^2
 SPINDLE_MAX_RPM = 10000
 EXTRUDER_MAX_TEMPERATURE = 250
@@ -88,7 +89,7 @@ INSTANT_RUN = True
 # more than maximum velocity specified here. If this parameter is True,
 # velocity would be decreased(proportional for all axises) to fit the maximum
 # velocity.
-AUTO_VELOCITY_ADJUSTMENT = True
+AUTO_VELOCITY_ADJUSTMENT = True 
 
 # Automatically turn on fan when extruder is heating, boolean value.
 AUTO_FAN_ON = True

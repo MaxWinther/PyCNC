@@ -24,6 +24,10 @@ except IOError:
 readline.set_history_length(1000)
 atexit.register(readline.write_history_file, history_file)
 
+
+#logging_config.debug_disable()
+logging_config.debug_enable()  
+
 machine = GMachine()
 
 
@@ -43,7 +47,7 @@ def do_line(line):
 
 def main():
     #logging_config.debug_disable()
-    logging_config.debug_enable()
+    #logging_config.debug_enable()
     try:
         if len(sys.argv) > 1:
             # Read file with gcode

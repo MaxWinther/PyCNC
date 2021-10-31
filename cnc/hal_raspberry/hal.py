@@ -21,6 +21,7 @@ STEP_PIN_MASK_E = 1 << STEPPER_STEP_PIN_E
 def init():
     """ Initialize GPIO pins and machine itself.
     """
+    logging.info("hal init()")
     gpio.init(STEPPER_STEP_PIN_X, rpgpio.GPIO.MODE_OUTPUT)
     gpio.init(STEPPER_STEP_PIN_Y, rpgpio.GPIO.MODE_OUTPUT)
     gpio.init(STEPPER_STEP_PIN_Z, rpgpio.GPIO.MODE_OUTPUT)
@@ -42,6 +43,7 @@ def init():
     gpio.clear(EXTRUDER_HEATER_PIN)
     gpio.clear(BED_HEATER_PIN)
     gpio.clear(STEPPERS_ENABLE_PIN)
+    dma._stop_dma()
     watchdog.start()
 
 
@@ -314,11 +316,14 @@ def move(generator):
 def join():
     """ Wait till motors work.
     """
-    logging.info("hal join()")
-    # wait till dma works
+    logging.debug("hal join()")
+    i = 0
     while dma.is_active():
         time.sleep(0.01)
-
+        i += 1
+        if i > 500:
+            i = 0
+            logging.info("hal join() waited for active dma for another 5s")
 
 def deinit():
     """ De-initialize hardware.
@@ -336,4 +341,5 @@ def deinit():
 def watchdog_feed():
     """ Feed hardware watchdog.
     """
+    # logging.info("hal::watchdog_feed()")
     watchdog.feed()
