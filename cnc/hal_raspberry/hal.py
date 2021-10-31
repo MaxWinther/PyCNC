@@ -238,8 +238,10 @@ def move(generator):
     current_cb = 0
     k = 0
     k0 = 0
+
+    # generator implements iterator-interface
     for direction, tx, ty, tz, te in generator:
-        logging.debug("hal::move() tx={}".format(tx))
+        logging.debug("hal::move() tx={}, ty={}, tz={}".format(tx, ty, tz))
         if current_cb is not None:
             while dma.current_address() + bytes_per_iter >= current_cb:
                 time.sleep(0.001)
@@ -249,28 +251,35 @@ def move(generator):
                     st = time.time()
                     break  # previous dma sequence has stopped
 
-        if direction:  # set up directions
+        # set up directions
+        if direction:
             pins_to_set = 0
             pins_to_clear = 0
+
             if tx > 0:
                 pins_to_clear |= 1 << STEPPER_DIR_PIN_X
             elif tx < 0:
                 pins_to_set |= 1 << STEPPER_DIR_PIN_X
+
             if ty > 0:
                 pins_to_clear |= 1 << STEPPER_DIR_PIN_Y
             elif ty < 0:
                 pins_to_set |= 1 << STEPPER_DIR_PIN_Y
+
             if tz > 0:
                 pins_to_clear |= 1 << STEPPER_DIR_PIN_Z
             elif tz < 0:
                 pins_to_set |= 1 << STEPPER_DIR_PIN_Z
+
             if te > 0:
                 pins_to_clear |= 1 << STEPPER_DIR_PIN_E
             elif te < 0:
                 pins_to_set |= 1 << STEPPER_DIR_PIN_E
+
             dma.add_set_clear(pins_to_set, pins_to_clear)
             continue
         pins = 0
+
         m = None
         for i in (tx, ty, tz, te):
             if i is not None and (m is None or i < m):
@@ -307,20 +316,26 @@ def move(generator):
                                  " {}/{}".format(nt, ng))
                     instant = False
                 else:
+                    logging.debug("hal::move() dma.run_stream()")
                     dma.run_stream()
                     is_ran = True
     pt = time.time()
     if not is_ran:
+        logging.debug("hal::move() dma not runned yet")
+
         # after long command, we can fill short buffer, that why we may need to
         #  wait until long command finishes
         while dma.is_active():
             time.sleep(0.01)
+
+        logging.debug("hal::move() start dma.run()")
         dma.run(False)
     else:
         # stream mode can be activated only if previous command was finished.
+        logging.debug("hal::move() dma.finalize_stream()")
         dma.finalize_stream()
 
-    logging.info("prepared in " + str(round(pt - st, 2)) + "s, estimated in "
+    logging.info("hal::move() prepared in " + str(round(pt - st, 2)) + "s, estimated in "
                  + str(round(generator.total_time_s(), 2)) + "s")
 
 

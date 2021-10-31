@@ -307,8 +307,8 @@ class PulseGeneratorLinear(PulseGenerator):
     def __str__(self):
         return 'PulseGeneratorLinear(total_pulses_x=' + str(self._total_pulses_x) \
                + ', total_pulses_y=' + str(self._total_pulses_y)\
-               + ', total_pulses_z' + str(self._total_pulses_z) \
-               + ', total_pulses_e' + str(self._total_pulses_e) + ')'
+               + ', total_pulses_z=' + str(self._total_pulses_z) \
+               + ', total_pulses_e=' + str(self._total_pulses_e) + ')'
 
     def _get_movement_parameters(self):
         """ Return movement parameters, see super class for details.

@@ -156,8 +156,10 @@ class DMAGPIO(DMAProto):
             :param delay_us: delay in us.
         """
         next_cb = self.__current_address + self._DMA_CONTROL_BLOCK_SIZE
+
         if next_cb > self._phys_memory.get_size():
             raise MemoryError("Out of allocated memory.")
+
         next1 = self._phys_memory.get_bus_address() + next_cb
         source = next1 - 8  # last 8 bytes are padding, use it to store data
         length = delay_us << 4  # * 16
