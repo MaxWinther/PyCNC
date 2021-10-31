@@ -219,6 +219,8 @@ class DMAProto(object):
                             self._phys_memory.get_bus_address())
         cs = DMA_CS_PRIORITY(7) | DMA_CS_PANIC_PRIORITY(7) | DMA_CS_DISDEBUG
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
+
+        logging.info("DMAProto _run_dma() set DMA_CS_ACTIVE bit")
         cs |= DMA_CS_ACTIVE
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
 
@@ -234,7 +236,7 @@ class DMAProto(object):
 
         cs = self._dma.read_int(self._DMA_CHANNEL_ADDRESS + DMA_CS)
         if cs & DMA_CS_ACTIVE == DMA_CS_ACTIVE:
-            logging.info("DMAProto _stop_dma() failed to reset DMA_CS_ACTIVE")
+            logging.info("DMAProto _stop_dma() failed to reset DMA_CS_ACTIVE bit")
 
         cs |= DMA_CS_RESET
         self._dma.write_int(self._DMA_CHANNEL_ADDRESS + DMA_CS, cs)
