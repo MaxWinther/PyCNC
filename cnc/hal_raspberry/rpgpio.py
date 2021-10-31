@@ -197,6 +197,7 @@ class DMAGPIO(DMAProto):
                      format(round(self.__current_address / 1048576.0, 2)))
 
     def run_stream(self):
+        logging.debug("DMAGPIO::run_stream()")
         """ Run DMA module in stream mode, i.e. does'n finalize last block
             and do not check if there is anything to do.
         """
