@@ -141,8 +141,8 @@ def move(generator):
 
         # set up directions
         if direction:
-            pins_to_set = ()
-            pins_to_clear = ()
+            pins_to_set = []
+            pins_to_clear = []
 
             if tx > 0:
                 pins_to_clear.append(STEPPER_DIR_PIN_X)
@@ -164,11 +164,11 @@ def move(generator):
             elif te < 0:
                 pins_to_set.append(STEPPER_DIR_PIN_E)
 
-            gpio.set(pins_to_set)
-            gpio.clear(pins_to_clear)
+            gpio.set(tuple(pins_to_set))
+            gpio.clear(tuple(pins_to_clear))
             continue
 
-        pins = ()
+        pins = []
 
         if tx is not None:
             pins.append(STEPPER_STEP_PIN_X)

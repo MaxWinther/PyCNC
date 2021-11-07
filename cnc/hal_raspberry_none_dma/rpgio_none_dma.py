@@ -13,7 +13,7 @@ class GPIONoneDMA(object):
         logging.info("GPIO(non-dma)")
 
     def init(self, pin, mode):
-        if mode == GPIONoneDMA.MOD_OUTPUT:
+        if mode == GPIONoneDMA.MODE_OUTPUT:
             GPIO.setup(pin, GPIO.OUT)
 
         elif mode == GPIONoneDMA.MODE_INPUT_PULLUP:
