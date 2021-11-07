@@ -12,22 +12,19 @@ class GPIONoneDMA(object):
     def __init__(self):
         logging.info("GPIO(non-dma)")
 
-    def init(pin, mode):
+    def init(self, pin, mode):
         if mode == GPIONoneDMA.MOD_OUTPUT:
             GPIO.setup(pin, GPIO.OUT)
 
         elif mode == GPIONoneDMA.MODE_INPUT_PULLUP:
             GPIO.setup(pin, GPIO.IN)
 
-    @staticmethod
     def set(self, pin):
         GPIO.output(pin, GPIO.HIGH)
 
-    @staticmethod
     def clear(self, pin):
         GPIO.output(pin, GPIO.LOW)
 
-    @staticmethod
     def pulse(self, pins, pulselength):
         GPIO.output(pins, GPIO.HIGH)
         time.sleep(pulselength)
