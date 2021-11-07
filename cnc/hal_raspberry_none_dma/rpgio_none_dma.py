@@ -12,12 +12,11 @@ class GPIONoneDMA(object):
     def __init__(self):
         logging.info("GPIO(non-dma)")
 
-    @staticmethod
     def init(pin, mode):
-        if mode == GPIO.MOD_OUTPUT:
+        if mode == GPIONoneDMA.MOD_OUTPUT:
             GPIO.setup(pin, GPIO.OUT)
 
-        elif mode == GPIO.MODE_INPUT_PULLUP:
+        elif mode == GPIONoneDMA.MODE_INPUT_PULLUP:
             GPIO.setup(pin, GPIO.IN)
 
     @staticmethod
