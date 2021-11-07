@@ -35,7 +35,7 @@ class GPIONoneDMA(object):
         GPIO.output(pins, GPIO.LOW)
 
 
-class NoneDMAPWM(object):
+class PWMNoneDMA(object):
     def __init__(self):
         logging.info("NoneDMAPWM")
 
