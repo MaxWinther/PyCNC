@@ -10,6 +10,7 @@ US_IN_SECONDS = 1000000
 gpio = rpgio_none_dma.GPIONoneDMA()
 pwm = rpgio_none_dma.PWMNoneDMA()
 running = False
+STEPPER_PULSE_LENGTH_SECOND = STEPPER_PULSE_LENGTH_US / 1000.0
 
 def init():
     """ Initialize GPIO pins and machine itself.
@@ -129,9 +130,7 @@ def move(generator):
     """ Move head to specified position
     :param generator: PulseGenerator object.
     """
-
-
-    logging.debug("hal::move() generator={}".format(generator))
+    logging.debug("hal(non-dma)::move() generator={}".format(generator))
 
     # enable steppers
     gpio.clear(STEPPERS_ENABLE_PIN)
@@ -179,20 +178,21 @@ def move(generator):
         if te is not None:
             pins.append(STEPPER_STEP_PIN_E)
 
-        gpio.pulse(pins, STEPPER_PULSE_LENGTH_US)
+        gpio.pulse(pins, STEPPER_PULSE_LENGTH_SECOND)
 
+    logging.debug("hal(non-dma)::move() finished")
 
 def join():
     """ Wait till motors work.
     """
-    logging.debug("hal join()")
+    logging.debug("hal(non-dma)::join()")
     i = 0
     while running:
         time.sleep(0.01)
         i += 1
         if i > 500:
             i = 0
-            logging.info("hal join() waited for active dma for another 5s")
+            logging.info("hal(non-dma)::join() waited for active dma for another 5s")
 
 
 def deinit():
