@@ -1,42 +1,36 @@
 import time
 
-from cnc.hal_raspberry_none_dma import rpgpio
+from cnc.hal_raspberry_none_dma import rpgio_none_dma
 from cnc.pulses import *
 from cnc.config import *
 from cnc.sensors import thermistor
 
 US_IN_SECONDS = 1000000
 
-gpio = rpgpio.GPIO()
-pwm = rpgpio.DMAPWM()
+gpio = rpgio_none_dma.GPIONoneDMA()
+pwm = rpgio_none_dma.PWMNoneDMA()
 running = False
-
-STEP_PIN_MASK_X = 1 << STEPPER_STEP_PIN_X
-STEP_PIN_MASK_Y = 1 << STEPPER_STEP_PIN_Y
-STEP_PIN_MASK_Z = 1 << STEPPER_STEP_PIN_Z
-STEP_PIN_MASK_E = 1 << STEPPER_STEP_PIN_E
-
 
 def init():
     """ Initialize GPIO pins and machine itself.
     """
     logging.info("hal init()")
-    gpio.init(STEPPER_STEP_PIN_X, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_STEP_PIN_Y, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_STEP_PIN_Z, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_STEP_PIN_E, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_DIR_PIN_X, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_DIR_PIN_Y, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_DIR_PIN_Z, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPER_DIR_PIN_E, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(ENDSTOP_PIN_X, rpgpio.GPIO.MODE_INPUT_PULLUP)
-    gpio.init(ENDSTOP_PIN_Y, rpgpio.GPIO.MODE_INPUT_PULLUP)
-    gpio.init(ENDSTOP_PIN_Z, rpgpio.GPIO.MODE_INPUT_PULLUP)
-    gpio.init(SPINDLE_PWM_PIN, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(FAN_PIN, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(EXTRUDER_HEATER_PIN, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(BED_HEATER_PIN, rpgpio.GPIO.MODE_OUTPUT)
-    gpio.init(STEPPERS_ENABLE_PIN, rpgpio.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_STEP_PIN_X, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_STEP_PIN_Y, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_STEP_PIN_Z, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_STEP_PIN_E, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_DIR_PIN_X, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_DIR_PIN_Y, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_DIR_PIN_Z, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPER_DIR_PIN_E, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(ENDSTOP_PIN_X, rpgio_none_dma.GPIO.MODE_INPUT_PULLUP)
+    gpio.init(ENDSTOP_PIN_Y, rpgio_none_dma.GPIO.MODE_INPUT_PULLUP)
+    gpio.init(ENDSTOP_PIN_Z, rpgio_none_dma.GPIO.MODE_INPUT_PULLUP)
+    gpio.init(SPINDLE_PWM_PIN, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(FAN_PIN, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(EXTRUDER_HEATER_PIN, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(BED_HEATER_PIN, rpgio_none_dma.GPIO.MODE_OUTPUT)
+    gpio.init(STEPPERS_ENABLE_PIN, rpgio_none_dma.GPIO.MODE_OUTPUT)
     gpio.clear(SPINDLE_PWM_PIN)
     gpio.clear(FAN_PIN)
     gpio.clear(EXTRUDER_HEATER_PIN)
@@ -48,8 +42,9 @@ def spindle_control(percent):
     :param percent: spindle speed in percent 0..100. If 0, stop the spindle.
     """
     logging.info("spindle control: {}%".format(percent))
+
     if percent > 0:
-        pwm.add_pin(SPINDLE_PWM_PIN, percent)
+       pwm.add_pin(SPINDLE_PWM_PIN, percent)
     else:
         pwm.remove_pin(SPINDLE_PWM_PIN)
 
@@ -135,7 +130,6 @@ def move(generator):
     :param generator: PulseGenerator object.
     """
 
-    running = True
 
     logging.debug("hal::move() generator={}".format(generator))
 
@@ -187,7 +181,6 @@ def move(generator):
 
         gpio.pulse(pins, STEPPER_PULSE_LENGTH_US)
 
-    running = False
 
 def join():
     """ Wait till motors work.
