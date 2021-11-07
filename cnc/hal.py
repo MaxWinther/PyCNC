@@ -99,7 +99,9 @@
 # check which module to import
 try:
     from cnc.hal_raspberry_none_dma.hal import *
-except ImportError:
+except ImportError as e:
+    print("----- Import of HAL failed got -----")
+    print(e)
     print("----- Hardware not detected, using virtual environment -----")
     print("----- Use M111 command to enable more detailed debug -----")
     from cnc.hal_virtual import *
